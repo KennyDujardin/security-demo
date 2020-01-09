@@ -16,8 +16,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomerDetailService customerDetailService;
 
     @Autowired
-    public SecurityConfig(CustomerDetailService customerDetailService){
-        this.customerDetailService=customerDetailService;
+    public SecurityConfig(CustomerDetailService customerDetailService) {
+        this.customerDetailService = customerDetailService;
     }
 
     @Override
@@ -26,6 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/*/floor1/**").hasAnyRole("USER")
                 .antMatchers("/*/floor2/**").hasAnyRole("ADMIN")
                 .and()
-                .httpBasic();
+                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(), customerDetailService));
     }
 }
